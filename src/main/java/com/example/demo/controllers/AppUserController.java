@@ -18,14 +18,14 @@ import com.example.demo.model.persistence.repositories.CartRepository;
 import com.example.demo.model.persistence.repositories.AppUserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 
-import java.awt.*;
+import com.splunk.logging.*;
 
 
 @RestController
 @RequestMapping("/api/user")
 public class AppUserController {
 
-	private static final Logger log = LoggerFactory.getLogger(AppUserController.class);
+	private static final Logger log = LoggerFactory.getLogger("splunk.logger");
 
 	@Autowired
 	private AppUserRepository appUserRepository;
@@ -44,12 +44,15 @@ public class AppUserController {
 	@GetMapping("/{username}")
 	public ResponseEntity<AppUser> findByUserName(@PathVariable String username) {
 		AppUser user = appUserRepository.findByUsername(username);
+		log.info("Looking for user {}", username);
 		return user == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(user);
 	}
 	
 	@PostMapping("/create")
 	public ResponseEntity<AppUser> createUser(@RequestBody CreateUserRequest createUserRequest) {
+		log.info("This is a test event");
 		log.info("Creating user {}", createUserRequest.getUsername());
+
 		AppUser user = new AppUser();
 		user.setUsername(createUserRequest.getUsername());
 		Cart cart = new Cart();
